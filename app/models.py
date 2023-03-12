@@ -26,3 +26,20 @@ class Contact(models.Model):
 
     def __str__(self):
         return f"{self.full_name}::{self.email}"
+
+
+
+
+class Comment(models.Model):
+    name = models.CharField(max_length=20)
+    email = models.EmailField()
+    website = models.CharField(max_length=100,blank=True)
+    message = models.TextField()
+
+
+    post_id =models.ForeignKey(Blog,on_delete=models.CASCADE, null=True,blank=True)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name}::{self.email}"

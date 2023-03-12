@@ -1,13 +1,13 @@
-from django.shortcuts import render,redirect
-from .models import Blog,Contact
+from django.shortcuts import render, redirect
+from .models import Blog, Contact, Comment
 
 
 def home_view(request):
-    posts = Blog.objects.filter(is_published =True)
+    posts = Blog.objects.filter(is_published=True)
     context = {
         'posts': posts
     }
-    return render(request, 'index.html',context)
+    return render(request, 'index.html', context)
 
 
 def blog_view(request):
@@ -15,14 +15,27 @@ def blog_view(request):
     context = {
         'posts': posts
     }
-    return render(request, 'blog.html',context)
+    return render(request, 'blog.html', context)
+
 
 def blog_detail_view(request, pk):
-    post = Blog.objects.get(id = pk)
+    post = Blog.objects.get(id=pk)
+    if request.method == "POST":
+        data = request.POST
+        name = data.get("name")
+        email = data.get("email")
+        website = data.get("website")
+        message = data.get("message")
+        obj = Comment.objects.create(name=name, email=email, website=website, message=message, post=post)
+        obj.save()
+        return redirect(f'/blog/{pk}')
+
+    comments = Comment.objects.filter(post=post.id)
     context = {
-        'post': post
+        'post': post,
+        'comments': comments
     }
-    return render(request, 'blog-single.html',context)
+    return render(request, 'blog-single.html', context)
 
 
 def about_view(request):
@@ -36,9 +49,8 @@ def contact_view(request):
         subject = data.get("subject")
         email = data.get("email")
         message = data.get("message")
-        obj = Contact.objects.create(full_name=full_name,subject=subject,email=email,message=message)
+        obj = Contact.objects.create(full_name=full_name, subject=subject, email=email, message=message)
         obj.save()
         return redirect("/contact")
-
 
     return render(request, 'contact.html')
