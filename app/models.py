@@ -37,7 +37,7 @@ class Comment(models.Model):
     message = models.TextField()
 
 
-    post_id =models.ForeignKey(Blog,on_delete=models.CASCADE, null=True,blank=True)
+    post_id = models.ForeignKey(Blog,on_delete=models.CASCADE, null=True,blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
 

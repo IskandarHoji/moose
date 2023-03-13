@@ -26,11 +26,11 @@ def blog_detail_view(request, pk):
         email = data.get("email")
         website = data.get("website")
         message = data.get("message")
-        obj = Comment.objects.create(name=name, email=email, website=website, message=message, post=post)
+        obj = Comment.objects.create(name=name, email=email, website=website, message=message, post_id=post)
         obj.save()
         return redirect(f'/blog/{pk}')
 
-    comments = Comment.objects.filter(post=post.id)
+    comments = Comment.objects.filter(post_id=post)
     context = {
         'post': post,
         'comments': comments
